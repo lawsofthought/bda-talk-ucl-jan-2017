@@ -1,0 +1,712 @@
+\documentclass{slides}
+\usepackage{xspace,tikz,graphicx,nth}
+\usepackage{fontawesome}
+
+\title[Bayesian Inference]{Introduction to Bayesian Data Analysis}
+\author[Andrews]{Mark Andrews \\ $\phantom{foo}$ \\ Psychology, Nottingham Trent University \\ $\phantom{foo}$ \\ \texttt{mark.andrews@ntu.ac.uk} \\ $\phantom{foo}$ \\ \faTwitter \texttt{@xmjandrews}}
+
+\date{}
+
+\begin{document}
+{
+	\begin{frame}
+		\titlepage
+	\end{frame}
+}
+
+\begin{frame}
+	\frametitle{Introduction}
+	\begin{itemize}
+
+	\item Bayesian data analysis is a general approach to statistical data
+		analysis that is based on the extensive application of
+		probability theory to all problems of inference and prediction.  
+
+	\item It is often contrasted with the more familiar \emph{classical} or
+		\emph{frequentist} approach to data analysis.  
+
+	\item While these approaches have co-existed throughout \nth{20}
+		century statistics, until recently, the Bayesian approach was
+		relatively marginalized.  
+
+	\item Since the early 1990s, however, there has been a remarkable rise
+		in the prevalence of Bayesian methods. 
+
+	\item For example, we estimate that approximately 20\% of recently
+		published articles in high profile statistics journals are now
+		on the topic of Bayesian methods. Likewise, there has been a
+		concomitant rise in the prevalence of Bayesian methods in
+		psychology. 
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{The Origin of Bayesian Data Analysis}
+	\begin{itemize}
+
+	\item  The origin of Bayesian inference can be traced to a posthumously published 1763 essay
+		\emph{Towards Solving a Problem in the Doctrine of Chances},
+		written some years earlier by Reverend Thomas Bayes
+		(1701-1761). 
+
+	\item In this essay, Bayes focused on a problem that is mathematically
+		identical to the problem of inferring the bias of a coin after
+		observing the outcome of a sequence of flips of that coin.  
+		
+	\item Bayes showed that the probability that the coin's bias is exactly
+		$\theta$ is proportional to the prior probability of $\theta$
+		multiplied by the probability of the observed outcomes given
+		$\theta$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Laplace and Inverse Inference}
+	\begin{itemize}
+		\item Shortly after the publication of Bayes's essay,  the
+			French polymath Pierre-Simon Laplace (1749-1827)
+			independently rediscovered Bayes' theorem and began to
+			apply it to practical problems of data analysis.
+
+
+	\item Laplace was the first to present Bayesian inference in what is now its modern form:
+		\[
+			\underbrace{\Prob{\theta \given \data}}_{\text{Posterior}}
+			= 
+			\frac{\overbrace{\Prob{\data \given \theta}}^{\text{likelihood}}
+				\overbrace{\Prob{\theta}}^{\text{prior}}}
+				{\underbrace{\int \Prob{\data \given \theta}\Prob{\theta} d\theta}_{\text{marginal likelihood}}}
+		\]
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Frequentism}
+	\begin{itemize}
+
+		\item By the early \nth{20} century, a frequentist definition
+			of probability became increasingly widely adopted.
+
+		\item Crucially, frequentism entails that the concept of
+			probability only applies to the outcomes of a random
+			\emph{experiment}.
+
+		\item As such, a parameter such as the bias of a coin, being a
+			fixed but unknown quantity, can not be given a
+			probabilistic interpretation.  
+
+		\item From this perspective, in the words of R. A. Fisher,
+			Bayesian methods were ``\ldots founded upon an error,
+			and must be wholly rejected.'' because ``(i)nferences
+			respecting populations, from which known samples have
+			been drawn, cannot be expressed in terms of
+			probability''. Fisher (1925).
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Return of Bayesian Methods}
+	
+	\begin{itemize}
+
+		\item Bayesian methods remained marginalized from the early to
+			the late \nth{20} century
+
+		\item However, their potential practical advantage over
+			classical methods was that the could be applied in
+			principle to any problem where a probabilistic model of
+			data could be specified.  
+
+		\item When computer power was minimal, any ``in principle''
+			advantages of Bayesian methods were not important.
+
+		\item However, the roughly exponential growth of computational
+			power from the 1970s onwards was the eventual catalyst
+			for the adoption of Bayesian methods.
+
+		\item By the late 1980's, Bayesian methods began returning to
+			widespread use in science.
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Inference using Bayes's rule}
+	\begin{itemize}
+
+		\item In any statistical model, we assume a probabilistic \emph{generative model} of the data being analyzed.
+		\item For example, in an independent samples t-test, we assume we have two data set drawn independently from two Normal distributions with fixed but unknown means.
+		\item In general, Bayes's rule allows us to infer the probable values of the unknown variables in the probabilistic generative model on the basis of observed data by calculating
+		\[
+			\underbrace{\Prob{\theta \given \data}}_{\text{Posterior}}
+			= 
+			\frac{\overbrace{\Prob{\data \given \theta}}^{\text{likelihood}}
+				\overbrace{\Prob{\theta}}^{\text{prior}}}
+				{\underbrace{\int \Prob{\data \given \theta}\Prob{\theta} d\theta}_{\text{marginal likelihood}}}
+		\]
+		where $\theta$ signifies the unknown variables, and $\data$ is the observed data.
+
+
+	\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Inference using Bayes's rule}
+
+	\begin{itemize}
+
+		\item We can understand Bayes's rule by way of simple probability calculations.
+		\item Consider the ``Boxes and Bulbs'' problem\footnote{This problem is taken from \emph{Schaum's Outlines: Probability} (2nd ed., 2000), pages 87-88.}:
+
+		\begin{quotation}
+		{\itshape
+		Box A has 10 lightbulbs, of which 4 are defective.
+		Box B has 6 lightbulbs, of which 1 is defective.
+		Box C has 8 lightbulbs, of which 3 are defective.
+		We randomly choose a box, and then randomly choose a lightbulb from that box. 
+		If we do choose a nondefective bulb, what is the probability it came from Box C?
+		}
+		\end{quotation}
+
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Probabilistic tree diagram}
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=4.0cm, sibling distance=3.0cm]
+\tikzstyle{level 2}=[level distance=5.5cm, sibling distance=1.5cm]
+
+% Define styles for bags and leafs
+\tikzstyle{branch} = [text width=4em, text centered]
+\tikzstyle{leaf} = [circle, minimum width=3pt,fill, inner sep=0pt]
+
+% The sloped option gives rotated edge labels. Personally
+% I find sloped labels a bit difficult to read. Remove the sloped options
+% to get horizontal labels. 
+\begin{figure}
+\begin{tikzpicture}[grow=right, sloped, scale=0.6, every node/.style={scale=0.6}]
+%\tikzstyle{every node}=[font=\footnotesize]
+\node[branch] {}
+    child {
+        node[branch] {Box C}        
+           child {
+                node[leaf, label=right:
+                    {$\Prob{\text{C},\text{Defective}} = \frac{1}{3}\times\frac{3}{8}\approx.125$}] {}
+                edge from parent
+                node[below] {$\Prob{\text{Defective}\given\text{C}}=\frac{3}{8}$}
+            } 
+	    child {
+                node[leaf, label=right:
+                    {$\Prob{\text{C},\text{Working}} = \frac{1}{3}\times\frac{5}{8}\approx.208$}] {}
+                edge from parent
+                node[above] {$\Prob{\text{Working}\given\text{C}}=\frac{5}{8}$}
+            }
+            edge from parent 
+            node[above] {$\Prob{C}=\frac{1}{3}$}
+    }
+    child {
+        node[branch] {Box B}        
+            child {
+                node[leaf, label=right:
+                    {$\Prob{\text{B},\text{Defective}} = \frac{1}{3}\times\frac{1}{6}\approx.056$}] {}
+                edge from parent
+                node[below] {$\Prob{\text{Defective}\given\text{B}}=\frac{1}{6}$}
+            }
+           child {
+                node[leaf, label=right:
+                    {$\Prob{\text{B},\text{Working}} = \frac{1}{3}\times\frac{5}{6}\approx.278$}] {}
+                edge from parent
+                node[above] {$\Prob{\text{Working}\given\text{B}}=\frac{5}{6}$}
+            } edge from parent 
+            node[above] {$\Prob{B}=\frac{1}{3}$}
+    }
+    child {
+        node[branch] {Box A}        
+           child {
+                node[leaf, label=right:
+                    {$\Prob{\text{A},\text{Defective}} = \frac{1}{3}\times\frac{4}{10}\approx.133$}] {}
+                edge from parent
+                node[below] {$\Prob{\text{Defective}\given\text{A}}=\frac{4}{10}$}
+            } 	
+           child {
+                node[leaf, label=right:
+                    {$\Prob{\text{A},\text{Working}} = \frac{1}{3}\times\frac{6}{10}\approx.2$}] {}
+                edge from parent
+                node[above] {$\Prob{\text{Working}\given\text{A}}=\frac{6}{10}$}
+            }
+            edge from parent 
+            node[above] {$\Prob{A}=\frac{1}{3}$}
+    }
+    ;
+\end{tikzpicture}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+	\item This tree structure gives you all the information you need to solve the problem. Note that on the right are given all the joint probabilities, which can be arranged to a joint probability table as follows:
+\begin{center}
+\begin{tabular}{rcc}
+& Working & Defective \\
+Box A & $.2$ & $.133$ \\
+Box B & $.278$ & $.056$ \\
+Box C & $.208$ & $.125$
+\end{tabular}
+\end{center}
+\item Now it is simple to see the overall probability of choosing a working bulb. It is probability of choosing Box A and choosing a working bulb \emph{or} choosing Box B and choosing a working bulb \emph{or} choosing Box C and choosing a working bulb. This is the sum of the first column, which is $.2+.278+.208\approx.686$. 
+\item Likewise, to get the probability of choosing Box C \emph{given} that we have chosen a working bulb, we see what proportion of the total probability of choosing a working bulb, i.e. $.686$ is from when we choose Box C and a working bulb, i.e. $.208$. In other words, it is $.208/.686\approx .304$. 
+%
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Using probability rules}
+	\begin{itemize}
+	\item $\Prob{\text{Bulb}=\text{Working}}$ is equal to 
+		{\small
+\begin{align*}
+\Prob{\text{Working}} &= \Prob{\text{Working},A} + \Prob{\text{Working}, B} + \Prob{\text{Working},C},\\
+						  &= \Prob{\text{Working}\vert A}\Prob{A} + \Prob{\text{Working}\vert C}\Prob{B} + \Prob{\text{Working}\vert C}\Prob{C},\\
+&= .2 + .278 + .208.\\
+&\approx .686.
+\end{align*}
+}
+\item When asked for $\Prob{C\given\text{Working}}$ we use the rule of conditional probability being the joint probability divided by the marginal probability, i.e. 
+	{\small
+\begin{align*}
+	&\Prob{C\given\text{Working}} = \frac{\Prob{\text{Working},C}}{\Prob{\text{Working}}},\\
+								       &= \frac{\Prob{\text{Working}\vert C}\Prob{C}}{\Prob{\text{Working}\vert A}\Prob{A} + \Prob{\text{Working}\vert C}\Prob{B} + \Prob{\text{Working}\vert C}\Prob{C}},\\
+&= \frac{.208}{.686},\\
+&\approx .304.
+\end{align*}
+}
+
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Inference in a Bernoulli Distribution}
+
+\begin{quotation} \ldots Polish mathematicians Tomasz Gliszczynski and
+	Waclaw Zawadowski\ldots spun a Belgian one euro coin 250 times,
+	and found it landed heads up 140 times \ldots When tossed 250
+	times, the one euro coin came up heads 139 times and tails 111.
+	\ldots 
+\end{quotation}
+
+\flushright{\emph{The Guardian}, January 4, 2002\footnote{ See
+	\texttt{http://bit.ly/1BOKu9b} for original story and
+	\texttt{http://bit.ly/1BOKx4Q} for discussion.}}
+
+	\begin{itemize}
+		\item A sample of $n=250$ coin tosses can be modelled as $n$ independent and identically dsibution Bernoulli random variables with parameter $\theta$.
+		\item In other words, our probabilitic model is
+			\[
+				x_i \sim \textrm{Bernoulli}(\theta),\quad\text{for $i \in \{1,2\ldots n\}$.}
+			\]
+			and we would like to inference the probable values of $\theta$ given an observation of $m=139$ (or $m=140$, etc.).
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Inference in a Bernoulli Distribution}
+	\begin{itemize}
+		\item The probabilistic generative model of the Euro coin toss data is as follows:
+			\begin{itemize}
+				\item The coin's bias corresponds to the fixed but unknown value of the parameter $\theta$ of a Bernoulli random variable.
+				\item The observed outcomes $x_1, x_2 \cdots x_n$ are $n$ iid samples from $\textrm{Bernoulli}(\theta)$.
+			\end{itemize}
+		\item This generative model can be extended by assuming that $\theta$ is itself drawn from a prior distribution $\Prob{\theta}$:
+			\begin{align*}
+				\theta &\sim \Prob{\theta},\\
+				x_i &\sim \textrm{Bernoulli}(\theta),\quad\text{for $i \in \{1,2\ldots n\}$.}
+			\end{align*}
+		\item In other words, we assume that a value for $\theta$ was randomly drawn from $\Prob{\theta}$ and then $n$ binary variables were sampled from $\textrm{Bernoulli}(\theta)$.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Inference in a Bernoulli Distribution}
+	\begin{itemize}
+		\item We aim to calculate
+		\[
+			\underbrace{\Prob{\theta \given \data}}_{\text{Posterior}}
+			= 
+			\frac{\overbrace{\Prob{\data \given \theta}}^{\text{likelihood}}
+				\overbrace{\Prob{\theta}}^{\text{prior}}}
+				{\underbrace{\int \Prob{\data \given \theta}\Prob{\theta} d\theta}_{\text{marginal likelihood}}}
+		\]
+		where $\theta$ signifies the coin's bias, and $\data$ is the observed coin toss data.
+
+	\item The \emph{likelihood} of $\theta$ gives the probability of the observed outcomes as a function of $\theta$:
+			\begin{align*}
+				\Prob{x_1, x_2\cdots x_n \given \theta} &= \prod_{i=1}^n \Prob{x_i \given \theta},\\
+				& = \prod_{i=1}^n \theta^{x_i} (1-\theta)^{1-x_i},\\
+				& = \theta^{m} (1-\theta)^{n-m}.
+				\label{eq:bernoulli-likelihood}
+			\end{align*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Inference in a Bernoulli Distribution}
+	\input{binomial.likelihood}
+		The likelihood function for $n=250$ and $m=139$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conjugate Priors}
+	\begin{itemize}
+		\item For a given likelihood function, a \emph{conjugate prior} distribution is a prior probability distribution that leads to a posterior distribution of the same parameteric family.
+		\item Using conjugate priors allows Bayesian inference and other probabilistic calculations to be performed analytically.
+		\item Only a small subset of probabilistic models have conjugate priors.
+		\item However, conjugate priors play a vital role in Monte Carlo methods like Gibbs sampling even in complex models.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The beta distribution}
+	\begin{itemize}
+		\item For the binomial likelihood function
+\[
+	\theta^m (1-\theta)^{n-m}	
+\]
+a conjugate prior is the beta distribution
+\[
+	\textrm{Beta}(\theta \given \alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \theta^{\alpha-1}(1 - \theta)^{\beta-1}.
+\]
+\item The \emph{normalizing constant} term is
+	\[
+		\frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} = \frac{1}{B(\alpha,\beta)},
+	\]
+	where $B(\alpha,\beta)$ is the beta function:
+	\[
+		B(\alpha,\beta) = \int \theta^\alpha (1-\theta)^{\beta-1}\ d\theta.
+	\]
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{The beta distribution}
+	\input{beta.3.5.distribution}
+	The beta distribution with $\alpha=3$ and $\beta=5$.
+\end{frame}
+\begin{frame}
+	\frametitle{Posterior distribution}
+	\begin{itemize}
+		\item Denoting the observed data by $D = (n, m)$, with the beta prior, the posterior distribution is 
+
+		\begin{align*}
+			\Prob{\theta\given D, \alpha,\beta} &= \frac{\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}}{\int\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}\ d\theta},\\
+			&\propto \overbrace{\theta^{m} (1-\theta)^{n-m}}^{\text{likelihood}} \times \overbrace{\theta^{\alpha-1}(1 - \theta)^{\beta-1}}^{\text{prior}},\\
+			&\propto \theta^{m + \alpha-1}(1 - \theta)^{n-m+\beta-1},\\
+			&= \textrm{Beta}(m + \alpha, n - m + \beta).
+		\end{align*}
+		where the normalizing constant is the reciprocal of the beta function 
+		\begin{align*}
+			\frac{\Gamma(m + \alpha)\Gamma(n - m + \beta)}{\Gamma(n + \alpha+\beta)} &= \int \theta^{\alpha + m - 1} (1-\theta)^{ \beta + n - m - 1}\ d\theta.\\
+			&=B(\alpha + m, \beta + n - m).
+		\end{align*}
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Posterior distribution}
+	\begin{itemize}
+		\item For our Euro coin example, our observed data are $n=250$ and $m=139$.
+		\item A noninformative uniform prior on $\theta$ is $\textrm{Beta}(\alpha=1,\beta=1)$.
+		\item With this prior, the posterior distribution is 
+			\begin{align*}
+				\textrm{Beta}(m + \alpha, n - m + \beta) &= \textrm{Beta}(139 + 1, 250 - 139 + 1),\\
+				&= \textrm{Beta}(140, 112)
+			\end{align*}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Posterior distribution}
+	\input{beta.140.112.distribution}
+	The posterior distribution when $n=250$, $m=139$, $\alpha=1$ and $\beta=1$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Summarizing the posterior distribution}
+	\begin{itemize}
+		\item The mean, variance and modes of any beta distribution are as follows:
+			\begin{align*}
+				\langle \theta \rangle &=\frac{\alpha}{\alpha+\beta} ,\\
+				\mathrm{V}(\theta) &= \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)},\\
+				\textrm{mode}(\theta) &= \frac{\alpha-1}{\alpha+\beta-2}.
+			\end{align*}
+		\item Thus, in our case of $\textrm{Beta}(140, 112)$, we have
+			\begin{align*}
+				\langle \theta \rangle &=  0.5556,\\
+				\mathrm{V}(\theta) &= 0.001, \quad\textrm{sd}(\theta) = 0.0312,\\
+				\textrm{mode}(\theta) &= 0.556.
+			\end{align*}
+
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{High posterior density (\hpd) intervals}
+	\begin{itemize}
+		\item \hpd intervals provide ranges that contain specified probability mass. For example, the 0.95 \hpd interval is the range of values that contain 0.95 of the probability mass of the distribution.
+		\item The $\varphi$ \hpd interval for the probability density function $\Prob{x}$ is computed by finding a probability density value $p^*$ such that 
+		\[
+			\Prob{\{x \colon \Prob{x} \geq p^*\}} = \varphi.
+		\]
+		\item In other words, we find the value $p^*$ such that the probability mass of the set of points whose density is greater than than $p^*$ is exactly $\varphi$. 
+		\item In general, the \hpd is not trivial to compute but in the case of symmetric distributions, it can be easily computed from the cumulative density function.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The 0.95 \hpd interval}
+	\input{beta.140.112.hpd}
+	The posterior distribution, with its $0.95$ \hpd, when $n=250$, $m=139$, $\alpha=1$ and $\beta=1$. In this case, the \hpd interval is $(0.494, 0.617)$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Posterior predictive distribution}
+
+	\begin{itemize}
+		\item Given that we have observed $m$ heads in $n$ coin tosses, what is the probability that the \emph{next} coin toss is heads.
+		\item This is given by the \emph{posterior predictive} probability that $x=1$:
+			\begin{align*}
+				\Prob{x=1\given D, \alpha, \beta} &= \int \Prob{x=1 \given \theta} \overbrace{\Prob{\theta\given D, \alpha, \beta}}^{\text{Posterior}}\ d\theta,\\
+				&= \int \theta \times \Prob{\theta\given D, \alpha, \beta} \ d\theta,\\
+				&= \left\langle \theta \right\rangle,\\
+				&= \frac{\alpha+m}{\alpha+\beta+n}.
+			\end{align*}
+		\item Thus, given 139 heads in 250 tosses, the predicted probability that the next coin will also be heads is $\approx 0.5556$.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Marginal likelihood}	
+	\begin{itemize}
+		\item The posterior distribution is 
+		\[
+			\Prob{\theta\given D, \alpha,\beta}
+			= \frac{\overbrace{\Prob{D\given\theta}}^{\text{Likelihood}}\overbrace{\Prob{\theta\given\alpha,\beta}}^{\text{Prior}}}
+			{\underbrace{\int\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}\ d\theta}_{\text{Marginal likelihood}}}.
+		\]
+		where the \emph{marginal likelihood} gives the likelihood of the model given the observed data:
+		\[
+			\int\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}\ d\theta \defeq \Prob{D\given \alpha,\beta}.
+		\]
+	\item In this example, it has a simple analytical form:
+		\[
+			\Prob{D\given \alpha,\beta} = B(\alpha+m, \beta+n-m) = \frac{\Gamma(m + \alpha)\Gamma(n - m + \beta)}{\Gamma(n + \alpha+\beta)}.
+		\]
+
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Model comparison}
+	\begin{itemize}
+		\item Given $D$, we can compare the probability of model $M_1$ relative to model $M_0$ as follows:
+			\begin{align*}
+				\frac{\Prob{M_1\given D}}{\Prob{M_0\given D}} = 
+				\underbrace{\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}}}_{\text{Bayes factor}} \times
+				\underbrace{\frac{\Prob{M_1}}{\Prob{M_0}}}_{\text{Priors odds}}. 
+			\end{align*}
+		\item When both models are equally probable a priori, then the relative posterior probabilities is determined by the Bayes factor.
+		\item We can compare our model $M_1$, i.e. with $\alpha = \beta = 1$, with the $M_0$ model that $\theta = \frac{1}{2}$.
+			\begin{align*}
+				\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}} = \frac{
+				\int\Prob{D\given\theta}\Prob{\theta\given\alpha=1,\beta=1}\ d\theta 
+				}{
+					\int\Prob{D\given\theta} \delta(\theta-\frac{1}{2})\ d\theta.
+				}
+			\end{align*}
+
+		\item This effectively compares a model that assumes a
+			completely random coin machine, i.e., coin biases are
+			generated according to $\textrm{Beta}(\alpha=1,
+			\beta=1)$, to a completely perfect coin machine, i.e.,
+			coin biases are generated according to
+			$\delta(\theta-\frac{1}{2})$.  \end{itemize}
+
+	\end{frame} 
+\begin{frame}
+	\frametitle{Model comparison}
+	\begin{itemize}
+		\item We can compare our model $M_1$, i.e. with $\alpha = \beta = 1$, with the $M_0$ model that $\theta = \frac{1}{2}$.
+			\begin{align*}
+				\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}} &= \frac{
+				\int\Prob{D\given\theta}\Prob{\theta\given\alpha=1,\beta=1}\ d\theta 
+				}{
+					\int\Prob{D\given\theta} \delta(\theta-\frac{1}{2})\ d\theta.
+				},\\
+				&= \frac{\Gamma(\alpha+m)\Gamma(\beta+n-m)}{\Gamma(\alpha+\beta+n)} \Big/ \tfrac{1}{2}^m (1-\tfrac{1}{2})^{n-m},\\
+				&= \frac{m!(n-m)!}{(n+1)!} \big/ \tfrac{1}{2^n}.\\
+				\intertext{If $n=250$, $m=139$, then}
+				&= \frac{139!111!}{251!} \big/ \tfrac{1}{2^{250}} = 0.38.
+			\end{align*}
+		\item This is a factor of $2.65$ in favour of the unbiased coin hypothesis.
+		\item Note that the classical statistics null hypothesis test gives a p-value of $p=0.0875$.
+	\end{itemize}
+	\let\thefootnote\relax\footnote{If $n$ is a positive integer $\Gamma(n) = (n-1)!$.}
+	\end{frame}
+
+
+	
+\begin{frame}
+	\frametitle{The role of Markov Chain Monte Carlo}
+	
+	\begin{itemize}
+
+		\item In general, given observed data $D$ and a model $\Omega$, the posterior distribution over the parameters $\theta$ of the model is
+		\[
+			\Prob{\theta\given D}
+			= \frac{\overbrace{\Prob{D\given\theta}}^{\text{Likelihood}}\overbrace{\Prob{\theta}}^{\text{Prior}}}
+			{\underbrace{\int\Prob{D\given\theta}\Prob{\theta}\ d\theta}_{\text{Marginal likelihood}}}.
+		\]
+		where the \emph{marginal likelihood} gives the likelihood of the model given the observed data.
+
+	\item Given the posterior distribution $\Prob{\theta\given D}$, our aim is often to characterise this distribution in terms of e.g. its mean, variance, etc. 
+	\item Likewise, we may aim to calculate \emph{posterior predictive} distributions such as 
+		\[
+			\Prob{x_{\text{new}} \given D} = \int\Prob{x_{\text{new}}\given\theta}\Prob{\theta\given D}\ d\theta.
+		\]
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sampling from posterior distributions}
+	\begin{itemize}
+
+		\item In only rare situations can we determine the characteristics of the posterior distribution, or calculate posterior predictive distributions, in closed form.
+		\item However, in general, if we can draw samples from $\Prob{\theta\given D}$ then we can approximate, e.g., the mean of the distribution by
+			\[
+				\langle\theta\rangle = \int\theta\Prob{\theta\given D} \approx \frac{1}{N} \sum_{i=1}^N \tilde{\theta}_i,
+			\]
+		or the posterior predictive distribution by 
+		\[
+			\Prob{x_{\text{new}} \given D} = \int\Prob{x_{\text{new}}\given\theta}\Prob{\theta\given D}\ d\theta
+			\approx \frac{1}{N} \sum_{i=1}^N \Prob{x_{\text{new}}\given\tilde{\theta}_i},
+		\]
+		where \[\tilde{\theta}_1, \tilde{\theta}_2 \ldots \tilde{\theta}_N\] are samples from $\Prob{\theta\given D}$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Rejection sampling}
+	\begin{itemize}
+		\item Rejection sampling is one of the simplest methods for sampling from posterior distributions.
+		\item Let us denote $\Prob{\theta\given D}$ by $f(\theta)$.
+		\item First we sample from $\tilde{\theta}$ from another (simpler) distribution $g(\theta)$.
+		\item The distribution $g(\theta)$ can be any function so long as there exists a constant $M$ such that 
+			\[ M \cdot g(\theta) \geq f(\theta),\]
+			for all possible values of $\theta$.
+		\item Then draw $u \sim U(0, 1)$, a random sample from a uniform distribution between $0$ and $1$.
+		\item If\[ u \leq \frac{f(\tilde{\theta})}{M \cdot g(\tilde{\theta})}\]
+			then keep $\tilde{\theta}$. 
+		\item Continue until $N$ samples are collected.
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Gibbs sampling}
+	\begin{itemize}
+		\item In a multivariate probability distribution, e.g. 
+			\[\Prob{x, y, z},\]
+			the univariate conditional distributions, e.g. $\Prob{x
+			\given y=\tilde{y}, z=\tilde{z}}$, may be
+			straightforward to sample from.
+		\item In Gibbs sampling, we set e.g. $y$ and $z$ to initial values $\tilde{y}_0$ and $\tilde{z}_0$ and then sample
+			\begin{align*}
+				&\tilde{x}_0 \sim \Prob{x \given y=\tilde{y}_0, z=\tilde{z}_0},\\
+				&\tilde{y}_1 \sim \Prob{x \given x=\tilde{x}_0, z=\tilde{z}_0},\\
+				&\tilde{z}_1 \sim \Prob{x \given x=\tilde{x}_0, y=\tilde{y}_1},
+			\end{align*}
+		and so on.
+	\item After convergence, the samples e.g. $\{\tilde{x}_N, \tilde{y}_N, \tilde{z}_N\}$ are draws from $\Prob{x, y, z}$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Metropolis Hastings}
+	\begin{itemize}	
+		\item Let us denote $\Prob{\theta\given D}$ by $f(\theta)$.
+		\item We sample from a symmetric \emph{proposal} distribution $Q(\cdot\vert\cdot)$.
+		\item We start with an initial $\tilde{\theta}_0$, and sample 
+			\[\tilde{\theta} \sim Q(\theta\vert\tilde{\theta}_0).\]
+		\item We then accept $\tilde{\theta}$ with probability 
+			\[\alpha = \min\left(1.0, \frac{f(\tilde{\theta})}{f(\tilde{\theta}_0)}\right).\]
+		\item After convergence, the accepted samples are draws from the distribution $f(\theta)$.
+		\item For Metropolis Hastings, the distribution $f(\theta)$ need be only known up to a proportional constant.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Advantages of Bayesian Methods}
+	\begin{itemize}	
+		\item Bayesian methods provide full probabilistic interpretations of all inferences
+and predictions that form the statistical analysis. 
+\item This allows for a more meaningful and concise interpretation of testing or estimation procedures.  
+\item For example, Bayesian hypothesis
+tests allow us explicitly state the probability, contingent on the modelling
+assumptions, of one hypothesis relative to another in light of observed data.
+Likewise, Bayesian \textsc{hpd}'s allow us to explicitly state the probability
+that an unknown quantity's value lies within a certain range of values. 
+\item These contrast with classical p-values and
+confidence intervals.  
+\item For example, a p-value for a hypothesis test gives the
+probability a statistic as or more extreme than that obtained could have
+happened were the hypothesis true. The meaningfulness of such a statement is
+less clear and p-values are
+routinely misinterpreted. 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Advantages of Bayesian Methods}
+
+	\begin{itemize}	
+		
+		
+	\item  In any probabilistic model that can be formally specified,
+		inference concerning any variable is always possible in
+		principle. 
+
+	\item In other words, the Bayesian approach provides a universal method
+		of inference. The probable values of any variables in the model
+		--- partially observed variables, latent variables, parameters,
+		hyper-parameters, etc. --- can always be inferred in principle,
+		once the model has been defined. 
+
+	\item This contrasts starkly with classical methods where, beyond a
+		small set of special cases, inference proceeds in a case by
+		case manner, often with each problem requiring its own solution
+		and even simple problems being surprisingly intractable.  
+
+	\item The practical consequence of this is that Bayesian methods will
+		be applicable to arbitrary probabilistic models, not simply
+		those with convenient properties or those that have been
+		studied intensely and solved.  
+
+	\item This allows the scientist or researcher to choose or develop a
+		model based on its scientific meaning rather then on
+		mathematical convenience. 
+
+\end{itemize}
+\end{frame}
+
+\end{document}
