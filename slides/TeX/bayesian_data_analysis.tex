@@ -1,5 +1,5 @@
 \documentclass{slides}
-\usepackage{xspace,tikz,graphicx,nth}
+\usepackage{xspace,tikz,graphicx,nth,hyperref}
 \usepackage{fontawesome}
 
 \title[Bayesian Inference]{Introduction to Bayesian Data Analysis}
@@ -40,6 +40,7 @@
 \end{itemize}
 
 \end{frame}
+
 
 
 \begin{frame}
@@ -139,161 +140,18 @@
 	\begin{itemize}
 
 		\item In any statistical model, we assume a probabilistic \emph{generative model} of the data being analyzed.
+		\item In other words, in any statistical problem, we have data $\mathcal{D}$ and we assume that this has been drawn from some probability distribution with fixed but unknown parameters $\theta$.
 		\item For example, in an independent samples t-test, we assume we have two data set drawn independently from two Normal distributions with fixed but unknown means.
-		\item In general, Bayes's rule allows us to infer the probable values of the unknown variables in the probabilistic generative model on the basis of observed data by calculating
+		\item Traditional methods proceed by determing the \emph{maximum likelihood estimator} of $\theta$, denoted $\hat{\theta}$, and using the sampling distribution of $\hat{\theta}$ to test hypotheses using p-values, or to calculate confidence intervals.
+		\item Bayesian methods, on the other hand, calculate the probability distribution over all possible values of the the unknown $\theta$ by using Bayes's rule:
 		\[
 			\underbrace{\Prob{\theta \given \data}}_{\text{Posterior}}
-			= 
-			\frac{\overbrace{\Prob{\data \given \theta}}^{\text{likelihood}}
-				\overbrace{\Prob{\theta}}^{\text{prior}}}
-				{\underbrace{\int \Prob{\data \given \theta}\Prob{\theta} d\theta}_{\text{marginal likelihood}}}
+			\propto 
+			\underbrace{\mathrm{P}(\data \given \theta)}_{\text{likelihood}}\underbrace{\Prob{\theta}}_{\text{prior}}
 		\]
-		where $\theta$ signifies the unknown variables, and $\data$ is the observed data.
-
-
 	\end{itemize}
 
 \end{frame}
-
-
-\begin{frame}
-	\frametitle{Inference using Bayes's rule}
-
-	\begin{itemize}
-
-		\item We can understand Bayes's rule by way of simple probability calculations.
-		\item Consider the ``Boxes and Bulbs'' problem\footnote{This problem is taken from \emph{Schaum's Outlines: Probability} (2nd ed., 2000), pages 87-88.}:
-
-		\begin{quotation}
-		{\itshape
-		Box A has 10 lightbulbs, of which 4 are defective.
-		Box B has 6 lightbulbs, of which 1 is defective.
-		Box C has 8 lightbulbs, of which 3 are defective.
-		We randomly choose a box, and then randomly choose a lightbulb from that box. 
-		If we do choose a nondefective bulb, what is the probability it came from Box C?
-		}
-		\end{quotation}
-
-	\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-	\frametitle{Probabilistic tree diagram}
-% Set the overall layout of the tree
-\tikzstyle{level 1}=[level distance=4.0cm, sibling distance=3.0cm]
-\tikzstyle{level 2}=[level distance=5.5cm, sibling distance=1.5cm]
-
-% Define styles for bags and leafs
-\tikzstyle{branch} = [text width=4em, text centered]
-\tikzstyle{leaf} = [circle, minimum width=3pt,fill, inner sep=0pt]
-
-% The sloped option gives rotated edge labels. Personally
-% I find sloped labels a bit difficult to read. Remove the sloped options
-% to get horizontal labels. 
-\begin{figure}
-\begin{tikzpicture}[grow=right, sloped, scale=0.6, every node/.style={scale=0.6}]
-%\tikzstyle{every node}=[font=\footnotesize]
-\node[branch] {}
-    child {
-        node[branch] {Box C}        
-           child {
-                node[leaf, label=right:
-                    {$\Prob{\text{C},\text{Defective}} = \frac{1}{3}\times\frac{3}{8}\approx.125$}] {}
-                edge from parent
-                node[below] {$\Prob{\text{Defective}\given\text{C}}=\frac{3}{8}$}
-            } 
-	    child {
-                node[leaf, label=right:
-                    {$\Prob{\text{C},\text{Working}} = \frac{1}{3}\times\frac{5}{8}\approx.208$}] {}
-                edge from parent
-                node[above] {$\Prob{\text{Working}\given\text{C}}=\frac{5}{8}$}
-            }
-            edge from parent 
-            node[above] {$\Prob{C}=\frac{1}{3}$}
-    }
-    child {
-        node[branch] {Box B}        
-            child {
-                node[leaf, label=right:
-                    {$\Prob{\text{B},\text{Defective}} = \frac{1}{3}\times\frac{1}{6}\approx.056$}] {}
-                edge from parent
-                node[below] {$\Prob{\text{Defective}\given\text{B}}=\frac{1}{6}$}
-            }
-           child {
-                node[leaf, label=right:
-                    {$\Prob{\text{B},\text{Working}} = \frac{1}{3}\times\frac{5}{6}\approx.278$}] {}
-                edge from parent
-                node[above] {$\Prob{\text{Working}\given\text{B}}=\frac{5}{6}$}
-            } edge from parent 
-            node[above] {$\Prob{B}=\frac{1}{3}$}
-    }
-    child {
-        node[branch] {Box A}        
-           child {
-                node[leaf, label=right:
-                    {$\Prob{\text{A},\text{Defective}} = \frac{1}{3}\times\frac{4}{10}\approx.133$}] {}
-                edge from parent
-                node[below] {$\Prob{\text{Defective}\given\text{A}}=\frac{4}{10}$}
-            } 	
-           child {
-                node[leaf, label=right:
-                    {$\Prob{\text{A},\text{Working}} = \frac{1}{3}\times\frac{6}{10}\approx.2$}] {}
-                edge from parent
-                node[above] {$\Prob{\text{Working}\given\text{A}}=\frac{6}{10}$}
-            }
-            edge from parent 
-            node[above] {$\Prob{A}=\frac{1}{3}$}
-    }
-    ;
-\end{tikzpicture}
-\end{figure}
-
-\end{frame}
-
-\begin{frame}
-	\begin{itemize}
-	\item This tree structure gives you all the information you need to solve the problem. Note that on the right are given all the joint probabilities, which can be arranged to a joint probability table as follows:
-\begin{center}
-\begin{tabular}{rcc}
-& Working & Defective \\
-Box A & $.2$ & $.133$ \\
-Box B & $.278$ & $.056$ \\
-Box C & $.208$ & $.125$
-\end{tabular}
-\end{center}
-\item Now it is simple to see the overall probability of choosing a working bulb. It is probability of choosing Box A and choosing a working bulb \emph{or} choosing Box B and choosing a working bulb \emph{or} choosing Box C and choosing a working bulb. This is the sum of the first column, which is $.2+.278+.208\approx.686$. 
-\item Likewise, to get the probability of choosing Box C \emph{given} that we have chosen a working bulb, we see what proportion of the total probability of choosing a working bulb, i.e. $.686$ is from when we choose Box C and a working bulb, i.e. $.208$. In other words, it is $.208/.686\approx .304$. 
-%
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Using probability rules}
-	\begin{itemize}
-	\item $\Prob{\text{Bulb}=\text{Working}}$ is equal to 
-		{\small
-\begin{align*}
-\Prob{\text{Working}} &= \Prob{\text{Working},A} + \Prob{\text{Working}, B} + \Prob{\text{Working},C},\\
-						  &= \Prob{\text{Working}\vert A}\Prob{A} + \Prob{\text{Working}\vert C}\Prob{B} + \Prob{\text{Working}\vert C}\Prob{C},\\
-&= .2 + .278 + .208.\\
-&\approx .686.
-\end{align*}
-}
-\item When asked for $\Prob{C\given\text{Working}}$ we use the rule of conditional probability being the joint probability divided by the marginal probability, i.e. 
-	{\small
-\begin{align*}
-	&\Prob{C\given\text{Working}} = \frac{\Prob{\text{Working},C}}{\Prob{\text{Working}}},\\
-								       &= \frac{\Prob{\text{Working}\vert C}\Prob{C}}{\Prob{\text{Working}\vert A}\Prob{A} + \Prob{\text{Working}\vert C}\Prob{B} + \Prob{\text{Working}\vert C}\Prob{C}},\\
-&= \frac{.208}{.686},\\
-&\approx .304.
-\end{align*}
-}
-
-	\end{itemize}
-\end{frame}
-
-
 
 \begin{frame}
 \frametitle{Inference in a Bernoulli Distribution}
@@ -362,7 +220,9 @@ Box C & $.208$ & $.125$
 \begin{frame}
 	\frametitle{Inference in a Bernoulli Distribution}
 	\input{binomial.likelihood}
-		The likelihood function for $n=250$ and $m=139$.
+		The likelihood function for $n=250$ and $m=139$.\\
+		{\small See also \url{https://lawsofthought.shinyapps.io/binomial_likelihood}}
+
 \end{frame}
 
 \begin{frame}
@@ -436,7 +296,8 @@ a conjugate prior is the beta distribution
 \begin{frame}
 	\frametitle{Posterior distribution}
 	\input{beta.140.112.distribution}
-	The posterior distribution when $n=250$, $m=139$, $\alpha=1$ and $\beta=1$.
+	The posterior distribution when $n=250$, $m=139$, $\alpha=1$ and $\beta=1$.\\
+	{\small	\url{https://lawsofthought.shinyapps.io/bayesian_coin_inference/}}
 \end{frame}
 
 \begin{frame}
@@ -493,77 +354,6 @@ a conjugate prior is the beta distribution
 		\item Thus, given 139 heads in 250 tosses, the predicted probability that the next coin will also be heads is $\approx 0.5556$.
 	\end{itemize}
 \end{frame}
-\begin{frame}
-	\frametitle{Marginal likelihood}	
-	\begin{itemize}
-		\item The posterior distribution is 
-		\[
-			\Prob{\theta\given D, \alpha,\beta}
-			= \frac{\overbrace{\Prob{D\given\theta}}^{\text{Likelihood}}\overbrace{\Prob{\theta\given\alpha,\beta}}^{\text{Prior}}}
-			{\underbrace{\int\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}\ d\theta}_{\text{Marginal likelihood}}}.
-		\]
-		where the \emph{marginal likelihood} gives the likelihood of the model given the observed data:
-		\[
-			\int\Prob{D\given\theta}\Prob{\theta\given\alpha,\beta}\ d\theta \defeq \Prob{D\given \alpha,\beta}.
-		\]
-	\item In this example, it has a simple analytical form:
-		\[
-			\Prob{D\given \alpha,\beta} = B(\alpha+m, \beta+n-m) = \frac{\Gamma(m + \alpha)\Gamma(n - m + \beta)}{\Gamma(n + \alpha+\beta)}.
-		\]
-
-
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Model comparison}
-	\begin{itemize}
-		\item Given $D$, we can compare the probability of model $M_1$ relative to model $M_0$ as follows:
-			\begin{align*}
-				\frac{\Prob{M_1\given D}}{\Prob{M_0\given D}} = 
-				\underbrace{\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}}}_{\text{Bayes factor}} \times
-				\underbrace{\frac{\Prob{M_1}}{\Prob{M_0}}}_{\text{Priors odds}}. 
-			\end{align*}
-		\item When both models are equally probable a priori, then the relative posterior probabilities is determined by the Bayes factor.
-		\item We can compare our model $M_1$, i.e. with $\alpha = \beta = 1$, with the $M_0$ model that $\theta = \frac{1}{2}$.
-			\begin{align*}
-				\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}} = \frac{
-				\int\Prob{D\given\theta}\Prob{\theta\given\alpha=1,\beta=1}\ d\theta 
-				}{
-					\int\Prob{D\given\theta} \delta(\theta-\frac{1}{2})\ d\theta.
-				}
-			\end{align*}
-
-		\item This effectively compares a model that assumes a
-			completely random coin machine, i.e., coin biases are
-			generated according to $\textrm{Beta}(\alpha=1,
-			\beta=1)$, to a completely perfect coin machine, i.e.,
-			coin biases are generated according to
-			$\delta(\theta-\frac{1}{2})$.  \end{itemize}
-
-	\end{frame} 
-\begin{frame}
-	\frametitle{Model comparison}
-	\begin{itemize}
-		\item We can compare our model $M_1$, i.e. with $\alpha = \beta = 1$, with the $M_0$ model that $\theta = \frac{1}{2}$.
-			\begin{align*}
-				\frac{\Prob{D\given M_1}}{\Prob{D\given M_0}} &= \frac{
-				\int\Prob{D\given\theta}\Prob{\theta\given\alpha=1,\beta=1}\ d\theta 
-				}{
-					\int\Prob{D\given\theta} \delta(\theta-\frac{1}{2})\ d\theta.
-				},\\
-				&= \frac{\Gamma(\alpha+m)\Gamma(\beta+n-m)}{\Gamma(\alpha+\beta+n)} \Big/ \tfrac{1}{2}^m (1-\tfrac{1}{2})^{n-m},\\
-				&= \frac{m!(n-m)!}{(n+1)!} \big/ \tfrac{1}{2^n}.\\
-				\intertext{If $n=250$, $m=139$, then}
-				&= \frac{139!111!}{251!} \big/ \tfrac{1}{2^{250}} = 0.38.
-			\end{align*}
-		\item This is a factor of $2.65$ in favour of the unbiased coin hypothesis.
-		\item Note that the classical statistics null hypothesis test gives a p-value of $p=0.0875$.
-	\end{itemize}
-	\let\thefootnote\relax\footnote{If $n$ is a positive integer $\Gamma(n) = (n-1)!$.}
-	\end{frame}
-
-
 	
 \begin{frame}
 	\frametitle{The role of Markov Chain Monte Carlo}
@@ -604,57 +394,6 @@ a conjugate prior is the beta distribution
 		where \[\tilde{\theta}_1, \tilde{\theta}_2 \ldots \tilde{\theta}_N\] are samples from $\Prob{\theta\given D}$.
 	\end{itemize}
 \end{frame}
-
-\begin{frame}
-	\frametitle{Rejection sampling}
-	\begin{itemize}
-		\item Rejection sampling is one of the simplest methods for sampling from posterior distributions.
-		\item Let us denote $\Prob{\theta\given D}$ by $f(\theta)$.
-		\item First we sample from $\tilde{\theta}$ from another (simpler) distribution $g(\theta)$.
-		\item The distribution $g(\theta)$ can be any function so long as there exists a constant $M$ such that 
-			\[ M \cdot g(\theta) \geq f(\theta),\]
-			for all possible values of $\theta$.
-		\item Then draw $u \sim U(0, 1)$, a random sample from a uniform distribution between $0$ and $1$.
-		\item If\[ u \leq \frac{f(\tilde{\theta})}{M \cdot g(\tilde{\theta})}\]
-			then keep $\tilde{\theta}$. 
-		\item Continue until $N$ samples are collected.
-
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Gibbs sampling}
-	\begin{itemize}
-		\item In a multivariate probability distribution, e.g. 
-			\[\Prob{x, y, z},\]
-			the univariate conditional distributions, e.g. $\Prob{x
-			\given y=\tilde{y}, z=\tilde{z}}$, may be
-			straightforward to sample from.
-		\item In Gibbs sampling, we set e.g. $y$ and $z$ to initial values $\tilde{y}_0$ and $\tilde{z}_0$ and then sample
-			\begin{align*}
-				&\tilde{x}_0 \sim \Prob{x \given y=\tilde{y}_0, z=\tilde{z}_0},\\
-				&\tilde{y}_1 \sim \Prob{x \given x=\tilde{x}_0, z=\tilde{z}_0},\\
-				&\tilde{z}_1 \sim \Prob{x \given x=\tilde{x}_0, y=\tilde{y}_1},
-			\end{align*}
-		and so on.
-	\item After convergence, the samples e.g. $\{\tilde{x}_N, \tilde{y}_N, \tilde{z}_N\}$ are draws from $\Prob{x, y, z}$.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Metropolis Hastings}
-	\begin{itemize}	
-		\item Let us denote $\Prob{\theta\given D}$ by $f(\theta)$.
-		\item We sample from a symmetric \emph{proposal} distribution $Q(\cdot\vert\cdot)$.
-		\item We start with an initial $\tilde{\theta}_0$, and sample 
-			\[\tilde{\theta} \sim Q(\theta\vert\tilde{\theta}_0).\]
-		\item We then accept $\tilde{\theta}$ with probability 
-			\[\alpha = \min\left(1.0, \frac{f(\tilde{\theta})}{f(\tilde{\theta}_0)}\right).\]
-		\item After convergence, the accepted samples are draws from the distribution $f(\theta)$.
-		\item For Metropolis Hastings, the distribution $f(\theta)$ need be only known up to a proportional constant.
-	\end{itemize}
-\end{frame}
-
 \begin{frame}
 	\frametitle{The Advantages of Bayesian Methods}
 	\begin{itemize}	
